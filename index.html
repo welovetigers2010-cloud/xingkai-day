@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>一日行楷 · 硬笔集训</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="一日行楷">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<style>
+@font-face{font-family:'LXGW WenKai';src:url('wenkai-l.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'LXGW WenKai';src:url('wenkai-m.woff2') format('woff2');font-weight:600;font-display:swap}
+</style>
+<style>
+:root{
+  --paper:#FAF6EE; --paper2:#F4EDDE; --ink:#2B2620; --dim:#8A8174; --line:#D8CFBE;
+  --zhu:#B5451F; --zhu2:#9C3A19; --gold:#B08D3E; --green:#5A6B4D;
+  --mono:ui-monospace,"SF Mono",Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper); color:var(--ink);
+  background-image:radial-gradient(#E7DECB 1px, transparent 1px);
+  background-size:26px 26px;
+  font-family:'LXGW WenKai','Kaiti SC','KaiTi',serif;
+  max-width:660px; margin:0 auto; padding:0 18px 90px; -webkit-font-smoothing:antialiased;
+}
+/* 头部 */
+header{padding:52px 0 6px; text-align:center}
+.brand{font-family:var(--mono); font-size:10px; letter-spacing:.5em; color:var(--zhu); text-transform:uppercase}
+h1{font-size:58px; font-weight:600; letter-spacing:.12em; margin:10px 0 6px}
+h1 .zhu{color:var(--zhu)}
+.sub{font-size:15px; color:var(--dim); letter-spacing:.2em}
+.rule{width:56px; height:3px; background:var(--zhu); margin:20px auto 0; position:relative}
+.rule::after{content:''; position:absolute; left:50%; top:50%; width:9px; height:9px; background:var(--paper); border:2px solid var(--zhu); border-radius:50%; transform:translate(-50%,-50%)}
+/* 印章架 */
+.seals{display:flex; justify-content:center; gap:14px; margin:26px 0 8px; flex-wrap:wrap}
+.seal-slot{text-align:center}
+.seal{width:52px; height:52px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:26px; color:#C7BCA6; background:transparent; border:2.5px dashed #CFC5AE; transition:all .3s; position:relative}
+.seal.on{background:var(--zhu); color:var(--paper); border:2.5px solid var(--zhu2); box-shadow:0 2px 10px rgba(181,69,31,.35); transform:rotate(-6deg); text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.seal.on::after{content:''; position:absolute; inset:0; border-radius:10px; background:radial-gradient(ellipse at 30% 25%, rgba(255,255,255,.28), transparent 55%)}
+.seal-slot .lab{font-family:var(--mono); font-size:9px; color:var(--dim); letter-spacing:.15em; margin-top:6px}
+.lead{margin:22px auto 0; max-width:520px; font-size:14.5px; line-height:2; color:#57503F; text-align:center}
+.lead b{color:var(--zhu)}
+/* 课卡 */
+.course{background:#FFFDF6; border:1.5px solid var(--line); border-radius:14px; margin-top:30px; box-shadow:0 2px 14px rgba(90,75,50,.07); overflow:hidden; position:relative}
+.course .stamp-corner{position:absolute; top:14px; right:16px; width:58px; height:58px; border:2.5px solid var(--zhu); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:30px; color:var(--zhu); opacity:0; transform:scale(2.2) rotate(14deg); transition:none; pointer-events:none; background:radial-gradient(ellipse at 35% 30%, rgba(181,69,31,.14), transparent 60%)}
+.course.done .stamp-corner{opacity:.92; transform:scale(1) rotate(-7deg); transition:all .38s cubic-bezier(.2,1.4,.4,1)}
+.c-head{padding:20px 22px 0}
+.c-time{font-family:var(--mono); font-size:10px; letter-spacing:.3em; color:var(--dim)}
+.c-title{font-size:26px; letter-spacing:.08em; margin-top:6px}
+.c-title small{font-size:13px; color:var(--dim); letter-spacing:.1em; margin-left:10px}
+.c-body{padding:14px 22px 22px}
+.c-lead{font-size:14.5px; line-height:2.05; color:#4A4436}
+.c-lead b{color:var(--zhu)}
+.c-lead .hlight{background:linear-gradient(transparent 62%, #F2D8A0 62%)}
+/* 演示区 */
+.demo{background:var(--paper2); border:1px solid var(--line); border-radius:12px; padding:14px 14px 10px; margin:16px 0}
+.demo-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px}
+.demo-head .t{font-size:13.5px; color:#57503F; letter-spacing:.06em}
+.demo-btns{display:flex; gap:8px}
+.db{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; border:1.5px solid var(--ink); background:var(--ink); color:var(--paper); padding:6px 13px; border-radius:20px; cursor:pointer}
+.db.ghost{background:transparent; color:var(--ink)}
+.db:active{transform:scale(.94)}
+.demo-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:10px}
+.demo-cell{text-align:center}
+.demo-cell .cell-lab{font-size:11.5px; color:var(--dim); margin-top:2px}
+svg.grid-svg{width:100%; height:auto; display:block; background:#FFFDF6; border-radius:8px; border:1px solid var(--line)}
+svg .p-main{fill:none; stroke:var(--ink); stroke-width:4.4; stroke-linecap:round; stroke-linejoin:round}
+svg .p-silk{fill:none; stroke:var(--zhu); stroke-width:1.7; stroke-linecap:round; opacity:.85}
+svg .p-red{fill:none; stroke:var(--zhu); stroke-width:4.4; stroke-linecap:round; stroke-linejoin:round}
+/* 米字格例字 */
+.hanzi-row{display:grid; grid-template-columns:repeat(auto-fill,minmax(86px,1fr)); gap:12px; margin:14px 0 4px}
+.hz{text-align:center}
+.hz .box{position:relative; width:86px; height:86px; margin:0 auto}
+.hz .box svg{position:absolute; inset:0; width:100%; height:100%}
+.hz .box span{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:52px; line-height:1; color:var(--ink); font-weight:400}
+.hz .cap{font-size:12px; color:var(--dim); margin-top:5px}
+/* 任务 */
+.task{background:linear-gradient(#FBF3E2,#F8EEDA); border:1px dashed var(--gold); border-radius:10px; padding:13px 16px; margin-top:16px; font-size:14px; line-height:1.95; color:#57503F}
+.task .tt{font-family:var(--mono); font-size:10px; letter-spacing:.3em; color:var(--gold); margin-bottom:4px}
+.task b{color:var(--zhu)}
+/* 打卡 */
+.punch{width:100%; margin-top:16px; padding:13px; font-size:15px; letter-spacing:.3em; font-family:inherit; border:none; border-radius:10px; cursor:pointer; background:var(--ink); color:var(--paper)}
+.punch:active{transform:scale(.98)}
+.course.done .punch{background:var(--zhu); box-shadow:0 2px 10px rgba(181,69,31,.3)}
+.course.done .punch::after{content:' ✓'}
+/* 证书 */
+.cert{display:none; margin-top:34px; background:#FFFDF6; border:2px solid var(--zhu); border-radius:16px; padding:36px 22px 30px; text-align:center; position:relative; box-shadow:0 4px 24px rgba(181,69,31,.14)}
+.cert.show{display:block; animation:certIn .7s cubic-bezier(.2,1.3,.4,1)}
+@keyframes certIn{0%{opacity:0; transform:translateY(26px) scale(.94)}100%{opacity:1; transform:none}}
+.cert .big{font-size:52px; letter-spacing:.16em; color:var(--zhu)}
+.cert .d{font-family:var(--mono); font-size:11px; letter-spacing:.3em; color:var(--dim); margin:14px 0 6px}
+.cert .words{font-size:16px; line-height:2.2; color:#4A4436; margin-top:8px}
+.cert .seals-row{display:flex; justify-content:center; gap:10px; margin-top:18px; flex-wrap:wrap}
+.cert .seals-row i{width:40px; height:40px; border-radius:9px; background:var(--zhu); color:var(--paper); font-style:normal; display:flex; align-items:center; justify-content:center; font-size:20px; transform:rotate(-6deg); box-shadow:0 2px 6px rgba(181,69,31,.3)}
+/* footer */
+footer{margin-top:40px; padding-top:20px; border-top:1px solid var(--line); font-size:12px; color:var(--dim); line-height:2; text-align:center}
+footer .rbtn{margin-top:14px; font-family:var(--mono); font-size:10px; letter-spacing:.2em; border:1px solid var(--dim); background:none; color:var(--dim); padding:8px 16px; border-radius:20px; cursor:pointer}
+/* fx */
+.cf{position:fixed; z-index:99; pointer-events:none}
+#toast{position:fixed; left:50%; bottom:44px; transform:translateX(-50%) translateY(18px); opacity:0; background:var(--zhu); color:var(--paper); font-size:14px; letter-spacing:.24em; padding:11px 26px; border-radius:8px; transition:all .3s; pointer-events:none; z-index:99; box-shadow:0 4px 18px rgba(181,69,31,.4)}
+#toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+@keyframes flashAnim{0%{opacity:.2}100%{opacity:0}}
+#flash{position:fixed; inset:0; background:#F2D8A0; opacity:0; pointer-events:none; z-index:98}
+@media (max-width:420px){ h1{font-size:46px} .hanzi-row{grid-template-columns:repeat(auto-fill,minmax(78px,1fr))} }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">CALLIGRAPHY BOOTCAMP</div>
+  <h1>一日<span class="zhu">行楷</span></h1>
+  <div class="sub">硬笔行楷一日集训 · 从笔画到成帖</div>
+  <div class="rule"></div>
+  <div class="seals" id="seals"></div>
+  <p class="lead">行楷不是另学一种字，是<b>楷书的连笔快写</b>。今天六课走完：笔画会连、偏旁会简、常用字能上手，<b>晚上就能写出一页有行楷味的字</b>。每一课都要<b>真的拿笔写</b>——页面是教练，纸上才是战场。每课 20–40 分钟，写 30 分钟就抬头看看远处。</p>
+</header>
+<main id="app"></main>
+<div class="cert" id="cert">
+  <div class="big">一日成帖</div>
+  <div class="d" id="certDate"></div>
+  <div class="seals-row" id="certSeals"></div>
+  <div class="words">笔画会连 · 牵丝会拖 · 偏旁会简 · 常用字能上手<br>今日之功，纸上见。往后每天十分钟，手上有功。</div>
+</div>
+<footer>
+  演示动画为运笔路线示意 · 以实际书写手感为准<br>
+  备一只顺手的笔（中性笔 0.5 即可）+ 一叠草稿纸 · 每写 30 分钟远眺 20 秒<br>
+  <button class="rbtn" id="btnReset">CLEAR /// 重置全部</button>
+</footer>
+<div id="flash"></div>
+<div id="toast"></div>
+<script>
+/* ============ 演示动画库 ============ */
+/* path 格式: [d, 类型(m主/s丝/r朱), 时长ms] viewBox 0 0 100 100 */
+const DEMOS = {
+  heng:      {tip:"横 · 行楷的横收笔顺势带丝", paths:[["M16,48 C38,41 66,41 88,45","m",700],["M88,45 C86,52 83,58 80,64","s",380]]},
+  shu:       {tip:"竖 · 悬针出锋，笔往下一送", paths:[["M50,13 C50,14 50,16 50,19","m",200],["M50,19 C50,42 50,64 50,88","m",700]]},
+  pie:       {tip:"撇 · 一路送锋，越写越轻", paths:[["M64,16 C54,38 36,60 13,78","m",800]]},
+  dianNa:    {tip:"捺变点 · 行楷不展捺脚，一笔收住", paths:[["M26,40 C44,50 60,58 78,66","m",650]]},
+  tiaoDian:  {tip:"点变挑 · 点完顺势向上挑", paths:[["M30,70 C42,62 56,50 72,36","m",650]]},
+  shiZi:     {tip:"横连竖 · 横一收笔，丝带下来直接写竖", paths:[["M18,44 C40,40 62,40 80,42","m",600],["M80,42 C70,45 62,46 54,48","s",360],["M48,12 C48,40 48,66 48,88","m",600]]},
+  shuZhe:    {tip:"竖连横折 · 竖到底折上来，一气写完", paths:[["M40,10 C40,20 40,30 40,40","m",420],["M40,40 C54,37 68,36 84,38","m",520],["M84,38 C86,52 86,64 84,78","m",520]]},
+  tiHua:     {tip:"提 · 左下顿笔，右上快挑出锋", paths:[["M20,72 C38,62 56,50 74,36","m",600]]},
+  sanDian:   {tip:"氵 · 两点连写，丝拖到提", paths:[["M20,28 C22,32 23,36 22,41","m",340],["M22,41 C26,37 30,33 34,29","s",300],["M38,29 C41,35 42,41 40,47","m",340],["M40,47 C35,52 31,57 27,62","s",300],["M22,66 C36,58 52,48 70,38","m",560]]},
+  danRen:    {tip:"亻 · 撇完拖丝，竖直接下来", paths:[["M46,14 C42,28 36,42 26,56","m",600],["M30,49 C35,43 39,39 43,36","s",320],["M44,36 C44,53 44,70 44,87","m",560]]},
+  zouZhi:    {tip:"辶 · 行楷只剩：点 + 一弯 + 平捺", paths:[["M40,20 C42,24 43,28 42,33","m",340],["M36,45 C48,47 62,47 76,45","m",520],["M76,45 C73,51 69,55 63,59","s",340],["M12,66 C34,76 62,78 86,68","m",700]]},
+  muZi:      {tip:"木 · 横竖连写，撇捺变两个点", paths:[["M14,40 C34,36 58,36 80,38","m",600],["M80,38 C71,40 62,42 54,44","s",340],["M47,12 C47,36 47,62 47,88","m",640],["M43,54 C35,62 25,68 12,72","m",460],["M52,54 C58,58 65,62 72,66","m",440]]},
+  yanPang:   {tip:"讠 · 点一下，横折提一笔连成", paths:[["M28,22 C30,26 31,31 29,37","m",360],["M26,46 C42,43 58,43 71,44","m",560],["M71,44 C74,55 72,61 61,64","m",480],["M61,64 C69,68 78,66 87,60","m",440]]},
+  shouPang:  {tip:"扌 · 横完拖丝接竖钩，提在半腰", paths:[["M18,38 C36,34 56,34 74,36","m",600],["M74,36 C65,38 56,40 47,42","s",340],["M46,16 C46,40 46,64 46,80","m",640],["M46,80 C48,86 52,87 57,83","m",320],["M34,60 C46,56 60,52 76,48","m",520]]},
+  de2:       {tip:"的 · 白部收紧，勺部一折到底", paths:[
+    ["M44,17 C40,25 34,32 26,38","m",520],["M24,36 C24,50 24,64 24,78","m",560],
+    ["M24,36 C32,34 40,34 46,36","m",460],["M46,36 C48,48 48,62 46,76","m",540],
+    ["M24,57 C32,55 40,55 45,57","m",440],["M24,78 C32,76 40,76 45,77","m",440],
+    ["M64,16 C58,24 52,32 46,38","m",520],
+    ["M50,38 C58,36 66,36 72,38","m",480],["M72,38 C78,50 78,66 72,80","m",560],["M72,80 C68,85 62,86 56,83","m",420],
+    ["M56,62 C60,60 65,60 68,62","m",380]]},
+  wo3:       {tip:"我 · 斜钩拉长送出锋，全字最舒展的一笔", paths:[
+    ["M30,26 C24,32 17,37 10,40","m",440],["M14,40 C26,39 38,39 47,41","m",480],
+    ["M34,41 C34,50 34,58 33,64","m",460],["M33,64 C36,66 40,66 44,64","m",360],
+    ["M52,12 C54,38 54,62 56,86","m",640],["M56,86 C58,89 61,89 64,86","m",300],
+    ["M42,52 C50,56 58,60 64,64","m",460],["M70,34 C64,44 58,52 50,58","m",480],
+    ["M74,52 C72,56 70,59 66,62","m",360]]},
+  lian2:     {tip:"连 · 车部三横连写，末笔拖丝送进走之", paths:[
+    ["M52,14 C52,22 52,30 52,38","m",460],
+    ["M38,38 C50,36 62,36 72,38","m",520],["M72,38 C74,46 74,52 72,58","m",420],
+    ["M40,58 C50,56 62,56 70,58","m",480],
+    ["M58,58 C58,66 58,72 57,78","m",440],["M57,78 C53,83 48,86 42,86","m",400],
+    ["M40,24 C42,28 43,32 42,37","m",360],
+    ["M32,48 C46,50 60,50 74,48","m",540],["M74,48 C71,54 67,58 61,62","s",360],
+    ["M10,68 C30,78 60,80 86,70","m",700]]},
+};
+/* ============ 课程数据 ============ */
+const COURSES = [
+ {id:"c1", time:"06:50 · 晨", title:"行楷四律", dur:"25 min", seal:"律",
+  lead:"先把心法立住——行楷 = <b>楷书的连笔快写</b>，字形不另起炉灶，只做四件事：<b>连</b>（笔势连贯，笔不离纸）、<b>简</b>（笔画简省，留特征）、<span class='hlight'><b>变</b>（捺变点、点变挑、折变圆）</span>、<b>贯</b>（字字气脉贯通）。看两组「变」：",
+  demos:["dianNa","tiaoDian"],
+  hanzi:[["大","捺缩成点"],["木","撇捺两点"],["小","点左右呼应"]],
+  task:"拿草稿纸：把 <b>大、木、小</b> 用楷书写一遍，再用「捺变点」的思路各写 <b>5 遍</b>——只改这一处，感受行楷从楷书里长出来。"},
+ {id:"c2", time:"09:00 · 早", title:"牵丝与连带", dur:"30 min", seal:"丝",
+  lead:"牵丝是行楷的签名：笔画收笔时<b>笔尖不离纸，轻轻拖出一条细线</b>连到下一笔。记住口诀：<span class='hlight'><b>粗笔写字，细丝带路——丝是「拖」出来的，不是「画」出来的</b></span>。看三个最常用的连带：",
+  demos:["shiZi","shuZhe","heng"],
+  hanzi:[["十","横连竖"],["千","撇横连"],["土","横竖横"]],
+  task:"<b>十、千</b> 各写 10 遍：横收笔时笔尖<b>不停顿</b>，轻轻往下一拖接竖。拖出的丝要细要虚，写不出丝就先写快一点。"},
+ {id:"c3", time:"11:00 · 午前", title:"高频偏旁连写", dur:"40 min", seal:"旁",
+  lead:"偏旁写快了，一半的字都会快。今天只拿 <b>六个最高频偏旁</b>：氵、亻、木、讠、扌、辶。核心套路都一样——<b>末笔出丝，接下一笔</b>。看演示：",
+  demos:["sanDian","danRen","zouZhi","muZi","yanPang","shouPang"],
+  hanzi:[["河","氵连"],["你","亻连"],["这","辶简"],["说","讠连"]],
+  task:"六个偏旁各写 <b>10 遍</b>（边写边念口诀：点连提、撇连竖、一弯平捺），然后 <b>河、你、这、说</b> 各 5 遍。"},
+ {id:"c4", time:"14:00 · 午后", title:"高频字成帖", dur:"40 min", seal:"帖",
+  lead:"白话文里 <b>「的是我不了在人有他这中」</b> 十来个字占掉近三成篇幅——把它们写顺，整页字立刻有行楷味。看三个示范，注意每笔的连法：",
+  demos:["de2","wo3","lian2"],
+  hanzi:[["的","白小勺连"],["我","斜钩出锋"],["是","日正相连"],["不","一撤一点"],["在","撇竖相顾"],["了","一笔连成"]],
+  task:"<b>的 是 我 不 了 在 人 有 他 这 中 大 来 上 国</b> 各写 <b>10 遍</b>，最后用其中至少 8 个字随口造一句话，整句写 3 遍。"},
+ {id:"c5", time:"17:00 · 黄昏", title:"词组与节奏", dur:"30 min", seal:"势",
+  lead:"单字会了，拼词组：上一个字的末笔方向，正好是下一个字的起笔方向——<span class='hlight'><b>字字藕断丝连，整行才有「流」感</b></span>。节奏口诀：主笔慢、牵丝快，一页字有快有慢才活。",
+  demos:["lian2","wo3"],
+  hanzi:[["今","人字冠头"],["天","两横连写"],["美","撇短横连"],["好","女横提起"]],
+  task:"<b>今天、学习、美好、加油</b> 各 5 遍；再写一行 <b>「日日是好日」</b>，注意五个字的间距渐变：稍紧—稍紧—稍开—收。"},
+ {id:"c6", time:"20:00 · 晚", title:"成帖毕业", dur:"30 min", seal:"成",
+  lead:"收官。铺一张最顺眼的纸，写你的毕业作品：<span class='hlight'><b>「一日之内，手上有功」</b></span>（也可以写自己的话），写上日期。写 <b>3 遍</b>，挑最满意的一张——这是你今天的字帖，也贴在明天能看见的地方。",
+  demos:["wo3"],
+  hanzi:[["功","工力相靠"],["手","钩弧有度"],["帖","巾部收窄"]],
+  task:"毕业作品三步：<b>①</b> 铅笔打格（若纸无格）<b>②</b> 通临 3 遍 <b>③</b> 选 1 张拍下来存好。写完在下面盖章。"},
+];
+const KEY = "xingkai_v1";
+let LOG = {};
+try{ LOG = JSON.parse(localStorage.getItem(KEY)||"{}")||{} }catch(e){ LOG = {} }
+const isDone = id => !!LOG[id];
+/* ============ 米字格 SVG ============ */
+function gridSVG(){
+  return `<svg viewBox="0 0 100 100" preserveAspectRatio="none">
+  <rect x="2" y="2" width="96" height="96" fill="none" stroke="#D8CFBE" stroke-width="1.6"/>
+  <line x1="50" y1="2" x2="50" y2="98" stroke="#E4DBC6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="2" y1="50" x2="98" y2="50" stroke="#E4DBC6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="2" y1="2" x2="98" y2="98" stroke="#EADFC9" stroke-width="1" stroke-dasharray="3 5"/>
+  <line x1="98" y1="2" x2="2" y2="98" stroke="#EADFC9" stroke-width="1" stroke-dasharray="3 5"/></svg>`;
+}
+function demoSVG(id, animate){
+  const d = DEMOS[id];
+  const paths = d.paths.map(([dd,ty,dur],i)=>{
+    const cls = ty==="m"?"p-main":(ty==="s"?"p-silk":"p-red");
+    return `<path class="${cls}" data-d="${dur}" d="${dd}"/>`;
+  }).join("");
+  return `<svg class="grid-svg" viewBox="0 0 100 100">${gridSVGInner()}<g class="anim-g">${paths}</g></svg>`;
+  function gridSVGInner(){
+    return `<rect x="2" y="2" width="96" height="96" fill="none" stroke="#DDD3BF" stroke-width="1.4"/>
+    <line x1="50" y1="2" x2="50" y2="98" stroke="#E9E0CA" stroke-width="1" stroke-dasharray="4 4"/>
+    <line x1="2" y1="50" x2="98" y2="50" stroke="#E9E0CA" stroke-width="1" stroke-dasharray="4 4"/>
+    <line x1="2" y1="2" x2="98" y2="98" stroke="#EEE5D0" stroke-width="1" stroke-dasharray="3 5"/>
+    <line x1="98" y1="2" x2="2" y2="98" stroke="#EEE5D0" stroke-width="1" stroke-dasharray="3 5"/>`;
+  }
+}
+/* ============ 动画播放 ============ */
+let timers = [];
+function clearTimers(){ timers.forEach(t=>clearTimeout(t)); timers = []; }
+function play(svg, speed){
+  clearTimers();
+  const paths = [...svg.querySelectorAll(".anim-g path")];
+  paths.forEach(p=>{
+    const L = p.getTotalLength();
+    p.style.transition = "none";
+    p.style.strokeDasharray = L + " " + L;
+    p.style.strokeDashoffset = L;
+  });
+  svg.getBoundingClientRect();
+  let t = 0;
+  paths.forEach(p=>{
+    const dur = (+p.dataset.d) * speed;
+    p.style.transition = `stroke-dashoffset ${dur}ms ease-in-out ${t}ms`;
+    p.style.strokeDashoffset = 0;
+    t += dur * 0.72;
+  });
+}
+/* ============ 渲染 ============ */
+const SEAL_META = COURSES.map(c=>({id:c.id, seal:c.seal, lab:c.time.split(" · ")[1]}));
+function renderSeals(){
+  document.getElementById("seals").innerHTML = SEAL_META.map(s=>
+    `<div class="seal-slot"><div class="seal ${isDone(s.id)?"on":""}">${s.seal}</div><div class="lab">${s.lab}</div></div>`).join("");
+}
+function render(){
+  const app = document.getElementById("app");
+  app.innerHTML = COURSES.map(c=>{
+    const demos = c.demos.map(id=>{
+      const d = DEMOS[id];
+      return `<div class="demo-cell">${demoSVG(id)}<div class="cell-lab">${d.tip}</div></div>`;
+    }).join("");
+    const hanzi = c.hanzi.map(([z,tip])=>
+      `<div class="hz"><div class="box">${gridSVG()}<span>${z}</span></div><div class="cap">${tip}</div></div>`).join("");
+    const done = isDone(c.id);
+    return `<section class="course ${done?"done":""}" id="${c.id}">
+      <div class="stamp-corner">${c.seal}</div>
+      <div class="c-head">
+        <div class="c-time">${c.time} · ${c.dur}</div>
+        <div class="c-title">${c.title}<small>第 ${COURSES.indexOf(c)+1} 课 / 共 6 课</small></div>
+      </div>
+      <div class="c-body">
+        <p class="c-lead">${c.lead}</p>
+        <div class="demo">
+          <div class="demo-head">
+            <div class="t">◈ 运笔演示 · 先看三遍再动笔</div>
+            <div class="demo-btns">
+              <button class="db ghost" data-act="slow">慢速</button>
+              <button class="db" data-act="play">▶ 演示</button>
+            </div>
+          </div>
+          <div class="demo-grid">${demos}</div>
+        </div>
+        <div class="hanzi-row">${hanzi}</div>
+        <div class="task"><div class="tt">MISSION · 今日实践</div>${c.task}</div>
+        <button class="punch" data-act="punch">${done?"已盖章 · 再点取消":"写完了 · 盖章"}</button>
+      </div>
+    </section>`;
+  }).join("");
+  renderSeals();
+  checkCert();
+  app.querySelectorAll('.db[data-act="play"]').forEach(b=>b.addEventListener("click",e=>{
+    e.stopPropagation(); play(e.target.closest(".demo").querySelector("svg"),1);
+  }));
+  app.querySelectorAll('.db[data-act="slow"]').forEach(b=>b.addEventListener("click",e=>{
+    e.stopPropagation(); play(e.target.closest(".demo").querySelector("svg"),1.8);
+  }));
+  app.querySelectorAll('.punch').forEach(b=>b.addEventListener("click",e=>{
+    toggleCourse(e.target.closest(".course").id);
+  }));
+}
+function toggleCourse(id){
+  const wasAll = COURSES.every(c=>isDone(c.id));
+  LOG[id] = !LOG[id];
+  if(LOG[id]){
+    localStorage.setItem(KEY, JSON.stringify(LOG));
+    const el = document.getElementById(id);
+    el.classList.add("done");
+    const seal = el.querySelector(".stamp-corner").getBoundingClientRect();
+    burst(seal.left+29, seal.top+29, 18);
+    flash(); toast("已盖章 · "+COURSES.find(c=>c.id===id).title);
+    const all = COURSES.every(c=>isDone(c.id));
+    if(all && !wasAll){ setTimeout(showCert, 700); }
+  }else{
+    delete LOG[id];
+    localStorage.setItem(KEY, JSON.stringify(LOG));
+    document.getElementById(id).classList.remove("done");
+    document.getElementById("cert").classList.remove("show");
+  }
+  renderSeals();
+}
+function checkCert(){
+  const all = COURSES.every(c=>isDone(c.id));
+  if(all) showCert(false);
+}
+function showCert(anim){
+  const cert = document.getElementById("cert");
+  document.getElementById("certDate").textContent =
+    new Date().toLocaleDateString("zh-CN",{year:"numeric",month:"long",day:"numeric",weekday:"long"}) + " · 一日集训修毕";
+  document.getElementById("certSeals").innerHTML = SEAL_META.map(s=>`<i>${s.seal}</i>`).join("");
+  if(anim){
+    cert.classList.add("show");
+    cert.scrollIntoView({behavior:"smooth", block:"center"});
+    setTimeout(()=>{ burst(innerWidth/2, innerHeight*.4, 44); flash(); }, 350);
+  }else{
+    cert.classList.add("show");
+  }
+}
+function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),1800); }
+function flash(){ const f=document.getElementById("flash"); f.style.animation="none"; f.offsetHeight; f.style.animation="flashAnim .5s ease forwards"; }
+const CF_COLORS=["#B5451F","#D9A441","#8C2F1B","#5A6B4D","#F2D8A0"];
+function burst(x,y,n){
+  for(let k=0;k<n;k++){
+    const p=document.createElement("div"); p.className="cf";
+    const s=4+Math.random()*6, c=CF_COLORS[Math.floor(Math.random()*CF_COLORS.length)];
+    p.style.cssText=`left:${x}px;top:${y}px;width:${s}px;height:${s}px;background:${c};border-radius:${Math.random()<.5?"50%":"1px"}`;
+    const tx=(Math.random()-.5)*260, ty=-Math.random()*200-30, rot=(Math.random()-.5)*600;
+    document.body.appendChild(p);
+    p.animate([{transform:"translate(0,0) rotate(0)",opacity:1},{transform:`translate(${tx}px,${ty}px) rotate(${rot}deg)`,opacity:0}],
+      {duration:700+Math.random()*500,easing:"cubic-bezier(.2,.7,.3,1)"}).onfinish=()=>p.remove();
+  }
+}
+document.getElementById("btnReset").addEventListener("click",()=>{
+  if(confirm("清空全部印章？六课重新开始。")){ LOG={}; localStorage.removeItem(KEY); document.getElementById("cert").classList.remove("show"); render(); toast("已重置"); }
+});
+render();
+/* 自动播放首屏演示 */
+setTimeout(()=>{ const f=document.querySelector("#c1 svg"); if(f && isDone("c1")===false) play(f,1); }, 600);
+</script>
+</body>
+</html>
